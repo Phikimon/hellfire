@@ -109,6 +109,7 @@ void term_init(void)
 
 void term_uninit(void)
 {
+	putchar('\n');
 	term_show_cursor();
 }
 

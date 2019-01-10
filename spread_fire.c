@@ -20,10 +20,8 @@ color_number dummy_spread_fire(struct terminal* term, int x, int y)
    cell. More unnamed constants to the god of contants! */
 color_number fancy_spread_fire(struct terminal* term, int x, int y)
 {
-	assert(y != 0);
-
 	const int triangle_size = 4;
-	const int enough_intensity = 10 * COLOR_WHITE;
+	const int enough_intensity = 5 * COLOR_WHITE;
 
 	/* Initialize randomizer */
 	static int is_first_call = 1;

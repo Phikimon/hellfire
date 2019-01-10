@@ -3,8 +3,21 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 #include "terminal.h"
+
+#define CALLOC(VAR, TYPE, N) \
+do { \
+	VAR = (TYPE)calloc(N, sizeof(*(VAR))); \
+	assert(VAR); \
+} while (0)
+
+#define FREE(VAR) \
+do { \
+	free(VAR); \
+	VAR = NULL; \
+} while (0)
 
 const rgb_value COLORS[COLOR_NUM] =
 {
@@ -80,8 +93,12 @@ static void term_get_dimensions(struct terminal* term)
 	struct winsize w = {0};
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-	term->width  = w.ws_col;
-	term->height = w.ws_row;
+	term->width  = (w.ws_col > MAX_TERM_WIDTH) ?
+			MAX_TERM_WIDTH :
+			w.ws_col;
+	term->height = (w.ws_row > MAX_TERM_HEIGHT) ?
+			MAX_TERM_HEIGHT :
+			w.ws_row;
 }
 
 void term_init(void)
@@ -95,29 +112,87 @@ void term_uninit(void)
 	term_show_cursor();
 }
 
-void term_ctor(struct terminal* term)
+static void parse_fire_string(struct terminal* term,
+				const char* fire_string,
+				int string_num)
+{
+	int string_len = strlen(fire_string);
+	assert(string_len == MAX_TERM_WIDTH);
+	int y = (double)string_num * term->height / MAX_TERM_HEIGHT;
+
+	for (int i = 0; i < string_len; i++) {
+		int x = (double)i * term->width / MAX_TERM_WIDTH;
+		switch (fire_string[i])
+		{
+			case '@':
+				term->fire_source[x][y] = COLOR_WHITE;
+				break;
+			case '-':
+				term->fire_source[x][y] = COLOR_BLACK;
+				break;
+			default:
+				assert(0);
+		}
+	}
+}
+
+static void parse_fire_source(struct terminal* term, enum fire_shape shape)
+{
+	int string_num = MAX_TERM_HEIGHT;
+
+#define $(string) \
+	do { \
+		string_num--; \
+		parse_fire_string(term, string, string_num); \
+	} while (0)
+
+	switch (shape)
+	{
+		case SHAPE_PHIL:
+#define SHAPE_PHIL
+#include "shapes.lst"
+#undef SHAPE_PHIL
+			break;
+		case SHAPE_LINE:
+#define SHAPE_LINE
+#include "shapes.lst"
+#undef SHAPE_LINE
+			break;
+		case SHAPE_NIL:
+			string_num = 0;
+			break;
+		default: assert(0);
+	}
+	assert(string_num == 0);
+
+#undef $
+}
+
+void term_ctor(struct terminal* term, enum fire_shape shape)
 {
 	assert(term);
 	term_get_dimensions(term);
 
 	/* Will be initialized with black color, because COLOR_BLACK == 0 */
-	term->intensity = (color_number**)calloc(term->width, sizeof(*term->intensity));
-	assert(term->intensity);
+	CALLOC(term->intensity,   color_number**, term->width);
+	CALLOC(term->fire_source, color_number**, term->width);
 	for (int i = 0; i < term->width; i++) {
-		term->intensity[i] = (color_number*)calloc(term->height, sizeof(*term->intensity[i]));
-		assert(term->intensity[i]);
+		CALLOC(term->intensity[i],   color_number*, term->height);
+		CALLOC(term->fire_source[i], color_number*, term->height);
 	}
+
+	parse_fire_source(term, shape);
 }
 
 void term_dtor(struct terminal* term)
 {
 	assert(term);
 	for (int i = 0; i < term->width; i++) {
-		free(term->intensity[i]);
-		term->intensity[i] = NULL;
+		FREE(term->intensity[i]);
+		FREE(term->fire_source[i]);
 	}
-	free(term->intensity);
-	term->intensity = NULL;
+	FREE(term->intensity);
+	FREE(term->fire_source);
 
 	term->width = term->height = 0;
 }
@@ -127,6 +202,5 @@ void term_copy(struct terminal* dst, struct terminal* src)
 	assert(dst->width == src->width && dst->height == src->height);
 
 	for (int x = 0; x < dst->width; x++)
-		for (int y = 0; y < dst->height; y++)
-			dst->intensity[x][y] = src->intensity[x][y];
+		memcpy(dst->intensity[x],   src->intensity[x],   dst->height * sizeof(dst->intensity[x][0]));
 }

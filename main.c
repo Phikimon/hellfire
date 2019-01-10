@@ -11,26 +11,26 @@ struct terminal term = {0};
 
 void int_handler(int dummy)
 {
-	static int tumbler = 1;
-	if (tumbler)
+	static int toggle_switch = 1;
+	if (toggle_switch)
 		flame_stop(&term);
 	else
 		flame_start(&term);
-	tumbler ^= 1;
+	toggle_switch ^= 1;
 }
 
 int main(void)
 {
 	term_init();
-	term_ctor(&term);
+	term_ctor(&term, SHAPE_PHIL);
 
 	flame_start(&term);
 	signal(SIGINT, int_handler);
-	while (is_there_any_flame(&term)) {
+	do {
 		flame_evolution(&term, fancy_spread_fire);
 		flame_render(&term);
 		usleep(60000);
-	}
+	} while (is_there_any_flame(&term));
 
 	term_dtor(&term);
 	term_uninit();

@@ -1,4 +1,4 @@
-![Gif](https://github.com/phikimon/hellfire/raw/master/fire.gif)
+![Gif](https://github.com/phikimon/hellfire/raw/master/phil_fire.gif)
 
 This is the remake of the fire animation implemented on PS X
 by Doom developers. Palette and the idea are taken from this article:
@@ -16,3 +16,8 @@ cells on the screen or when you press Ctrl-\\.
 Be free to experiment with the spread_fire() functions as they
 affect fire behavior in a very interesting way.
 
+Also, arbitrary shapes of fire source are possible. Just add new shape in
+shapes.lst, in the enum in terminal.h and in parse_fire_source(), or just
+edit existing shapes.
+
+![Gif](https://github.com/phikimon/hellfire/raw/master/fire.gif)

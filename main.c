@@ -11,24 +11,24 @@ struct terminal term = {0};
 
 void int_handler(int dummy)
 {
-	static int toggle_switch = 1;
-	if (toggle_switch)
-		flame_stop(&term);
-	else
-		flame_start(&term);
-	toggle_switch ^= 1;
+	term_toggle_fire_source(&term);
 }
 
 int main(void)
 {
-	term_init();
-	term_ctor(&term, SHAPE_PHIL);
+	sigset_t sigs;
+	sigemptyset(&sigs);
+	sigaddset(&sigs, SIGINT);
 
-	flame_start(&term);
+	term_init();
+	term_ctor(&term, SHAPE_LINE);
+
 	signal(SIGINT, int_handler);
 	do {
+		sigprocmask(SIG_BLOCK, &sigs, NULL);
 		flame_evolution(&term, fancy_spread_fire);
 		flame_render(&term);
+		sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 		usleep(60000);
 	} while (is_there_any_flame(&term));
 

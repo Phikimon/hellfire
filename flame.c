@@ -3,18 +3,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-void flame_start(struct terminal* term)
-{
-	assert(term);
-	term->is_fire_source_present = 1;
-}
-
-void flame_stop(struct terminal* term)
-{
-	assert(term);
-	term->is_fire_source_present = 0;
-}
-
 void flame_render(struct terminal* term)
 {
 	assert(term);
@@ -31,7 +19,7 @@ void flame_render(struct terminal* term)
 
 static int is_fire_source_cell(struct terminal* term, int x, int y)
 {
-	return (term->is_fire_source_present == 1) && (term->fire_source[x][y] != COLOR_BLACK);
+	return (term->fire_source[x][y] != COLOR_BLACK);
 }
 
 void flame_evolution(struct terminal* term, spread_fire_func spread_fire)

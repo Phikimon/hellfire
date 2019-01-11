@@ -137,9 +137,18 @@ static void parse_fire_string(struct terminal* term,
 	}
 }
 
-static void parse_fire_source(struct terminal* term, enum fire_shape shape)
+void term_toggle_fire_source(struct terminal* term)
 {
+	assert(term);
+	term_set_fire_source(term, (term->current_shape + 1) % SHAPE_NUM);
+}
+
+void term_set_fire_source(struct terminal* term, enum fire_shape shape)
+{
+	assert(term);
+	assert(shape >= 0 && shape < SHAPE_NUM);
 	int string_num = MAX_TERM_HEIGHT;
+	term->current_shape = shape;
 
 #define $(string) \
 	do { \
@@ -160,6 +169,11 @@ static void parse_fire_source(struct terminal* term, enum fire_shape shape)
 #undef SHAPE_LINE
 			break;
 		case SHAPE_NIL:
+			for (int i = 0; i < term->width; i++)
+				memset(term->fire_source[i] ,
+					COLOR_BLACK,
+					term->height * sizeof(term->fire_source[i][0]));
+
 			string_num = 0;
 			break;
 		default: assert(0);
@@ -182,7 +196,7 @@ void term_ctor(struct terminal* term, enum fire_shape shape)
 		CALLOC(term->fire_source[i], color_number*, term->height);
 	}
 
-	parse_fire_source(term, shape);
+	term_set_fire_source(term, shape);
 }
 
 void term_dtor(struct terminal* term)

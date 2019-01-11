@@ -13,9 +13,16 @@ typedef unsigned char rgb_value[3];
 
 extern const rgb_value COLORS[COLOR_NUM];
 
+enum fire_shape {
+	SHAPE_NIL = 0,
+	SHAPE_LINE,
+	SHAPE_PHIL,
+	SHAPE_NUM
+};
+
 struct terminal {
 	int width, height;
-	int is_fire_source_present;
+	enum fire_shape current_shape;
 	color_number** intensity;
 	color_number** fire_source;
 };
@@ -24,16 +31,11 @@ struct point {
 	int x, y;
 };
 
-enum fire_shape {
-	SHAPE_NIL = 0,
-	SHAPE_LINE,
-	SHAPE_PHIL,
-	SHAPE_NUM
-};
-
-void term_ctor(struct terminal* term, enum fire_shape);
+void term_ctor(struct terminal* term, enum fire_shape shape);
 void term_dtor(struct terminal* term);
 void term_copy(struct terminal* dst, struct terminal* src);
+void term_set_fire_source(struct terminal* term, enum fire_shape shape);
+void term_toggle_fire_source(struct terminal* term);
 
 void term_init(void);
 void term_uninit(void);

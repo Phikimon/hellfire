@@ -11,8 +11,8 @@ http://fabiensanglard.net/doom_fire_psx/
 $ make
 $ ./fire
 ```
-By pressing Ctrl-C you can toggle the presence of fire source(bottom line,
-can be noticed in the GIF). Program exits when there are no more fire
+By sending SIGINT(pressing Ctrl-C) you can toggle the fire source shape.
+Program exits when there are no more fire
 cells on the screen or when you press Ctrl-\\.
 
 Be free to experiment with the spread_fire() functions as they

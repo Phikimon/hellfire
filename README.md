@@ -6,6 +6,19 @@ This is the remake of the fire animation implemented on PS X
 by Doom developers. Palette and the idea are taken from this article:
 http://fabiensanglard.net/doom_fire_psx/
 
+This project depends on no libraries but libc, it only requires your
+terminal to support True Colour mode. List of supported terminals
+can be found [here](https://gist.github.com/XVilka/8346728).
+
+There is a quick way, but not very reliable way to check if your
+terminal supports truecolor:
+```bash
+$ echo $COLORTERM
+...
+```
+Look for '24bit' or 'truecolor' words in the output of echo.
+
+
 ## Usage:
 ```bash
 $ make

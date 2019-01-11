@@ -17,6 +17,7 @@ enum fire_shape {
 	SHAPE_NIL = 0,
 	SHAPE_LINE,
 	SHAPE_PHIL,
+	SHAPE_HEART,
 	SHAPE_NUM
 };
 

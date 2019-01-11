@@ -168,6 +168,11 @@ void term_set_fire_source(struct terminal* term, enum fire_shape shape)
 #include "shapes.lst"
 #undef SHAPE_LINE
 			break;
+		case SHAPE_HEART:
+#define SHAPE_HEART
+#include "shapes.lst"
+#undef SHAPE_HEART
+			break;
 		case SHAPE_NIL:
 			for (int i = 0; i < term->width; i++)
 				memset(term->fire_source[i] ,

@@ -20,4 +20,7 @@ Also, arbitrary shapes of fire source are possible. Just add new shape in
 shapes.lst, in the enum in terminal.h and in parse_fire_source(), or just
 edit existing shapes.
 
+Commit 'Add SHAPE_HEART' might be useful, if you are willing to add your
+shape.
+
 ![Gif](https://github.com/phikimon/hellfire/raw/master/fire.gif)

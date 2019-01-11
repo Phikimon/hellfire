@@ -10,7 +10,7 @@ This project depends on no libraries but libc, it only requires your
 terminal to support True Colour mode. List of supported terminals
 can be found [here](https://gist.github.com/XVilka/8346728).
 
-There is a quick way, but not very reliable way to check if your
+There is a quick, but not very reliable way to check if your
 terminal supports truecolor:
 ```bash
 $ echo $COLORTERM

@@ -1,4 +1,4 @@
-![Gif](https://github.com/phikimon/hellfire/raw/master/toggle.gif)
+-> ![Gif](https://github.com/phikimon/hellfire/raw/master/toggle.gif) <-
 
 This is the remake of the fire animation implemented on PS X
 by Doom developers. Palette and the idea are taken from this article:

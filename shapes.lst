@@ -1,5 +1,6 @@
 /* In this file there must be ascii-pictures that consist only of '@' and '-'.
-   Resolutions are defined in terminal.c */
+   Resolutions are defined in terminal.h. To add new form see 'Add SHAPE_HEART'
+   commit */
 
 #if defined(SHAPE_LINE)
 
